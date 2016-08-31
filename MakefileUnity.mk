@@ -4,7 +4,7 @@
 SILENCE = @
 
 #---- Outputs ----#
-COMPONENT_NAME = stm32f401re-template
+COMPONENT_NAME = unity-template
 
 #--- Inputs ----#
 UNITY_HOME = ./unity-framework-src
@@ -28,8 +28,8 @@ TEST_SRC_DIRS = \
 	$(UNITY_HOME)/src\
     $(UNITY_HOME)/extras/fixture/src\
     $(UNITY_HOME)/extras/fixture/test\
-	$(PROJECT_TEST_DIR)/FirstGroup\
-#	$(UNITY_HOME)/unity\
+	$(PROJECT_TEST_DIR)/FirstGroup
+
 
 
 MOCKS_SRC_DIRS = \
