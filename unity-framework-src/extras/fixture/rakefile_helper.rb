@@ -24,7 +24,7 @@ module RakefileHelpers
   end
 
   def configure_clean
-    CLEAN.include($cfg['compiler']['build_path'] + '*.*') unless $cfg['compiler']['build_path'].nil?
+    CLEAN.include($cfg['compiler']['build_path'] + '*.o') unless $cfg['compiler']['build_path'].nil?
   end
 
   def configure_toolchain(config_file=DEFAULT_CONFIG_FILE)

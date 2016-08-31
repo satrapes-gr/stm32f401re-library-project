@@ -1,0 +1,78 @@
+Unity test run 1 of 2
+TEST(UnityFixture, PointerSetting) PASS
+TEST(UnityFixture, ForceMallocFail) PASS
+TEST(UnityFixture, ReallocSmallerIsUnchanged) PASS
+TEST(UnityFixture, ReallocSameIsUnchanged) PASS
+TEST(UnityFixture, ReallocLargerNeeded) PASS
+TEST(UnityFixture, ReallocNullPointerIsLikeMalloc) PASS
+TEST(UnityFixture, ReallocSizeZeroFreesMemAndReturnsNullPointer) PASS
+TEST(UnityFixture, CallocFillsWithZero) PASS
+TEST(UnityFixture, PointerSet) PASS
+TEST(UnityFixture, FreeNULLSafety) PASS
+TEST(UnityFixture, ConcludeTestIncrementsFailCount) PASS
+TEST(UnityCommandOptions, DefaultOptions) PASS
+TEST(UnityCommandOptions, OptionVerbose) PASS
+TEST(UnityCommandOptions, OptionSelectTestByGroup) PASS
+TEST(UnityCommandOptions, OptionSelectTestByName) PASS
+TEST(UnityCommandOptions, OptionSelectRepeatTestsDefaultCount) PASS
+TEST(UnityCommandOptions, OptionSelectRepeatTestsSpecificCount) PASS
+TEST(UnityCommandOptions, MultipleOptions) PASS
+TEST(UnityCommandOptions, MultipleOptionsDashRNotLastAndNoValueSpecified) PASS
+TEST(UnityCommandOptions, UnknownCommandIsIgnored) PASS
+TEST(UnityCommandOptions, GroupOrNameFilterWithoutStringFails) PASS
+TEST(UnityCommandOptions, GroupFilterReallyFilters) PASS
+IGNORE_TEST(UnityCommandOptions, TestShouldBeIgnored)
+TEST(LeakDetection, DetectsLeak) PASS
+TEST(LeakDetection, BufferOverrunFoundDuringFree) PASS
+TEST(LeakDetection, BufferOverrunFoundDuringRealloc) PASS
+TEST(LeakDetection, BufferGuardWriteFoundDuringFree) PASS
+TEST(LeakDetection, BufferGuardWriteFoundDuringRealloc) PASS
+TEST(LeakDetection, PointerSettingMax) PASS
+TEST(InternalMalloc, MallocPastBufferFails) PASS
+TEST(InternalMalloc, CallocPastBufferFails) PASS
+TEST(InternalMalloc, MallocThenReallocGrowsMemoryInPlace) PASS
+TEST(InternalMalloc, ReallocFailDoesNotFreeMem) PASS
+
+
+-----------------------
+33 Tests 0 Failures 1 Ignored 
+OK
+Unity test run 2 of 2
+TEST(UnityFixture, PointerSetting) PASS
+TEST(UnityFixture, ForceMallocFail) PASS
+TEST(UnityFixture, ReallocSmallerIsUnchanged) PASS
+TEST(UnityFixture, ReallocSameIsUnchanged) PASS
+TEST(UnityFixture, ReallocLargerNeeded) PASS
+TEST(UnityFixture, ReallocNullPointerIsLikeMalloc) PASS
+TEST(UnityFixture, ReallocSizeZeroFreesMemAndReturnsNullPointer) PASS
+TEST(UnityFixture, CallocFillsWithZero) PASS
+TEST(UnityFixture, PointerSet) PASS
+TEST(UnityFixture, FreeNULLSafety) PASS
+TEST(UnityFixture, ConcludeTestIncrementsFailCount) PASS
+TEST(UnityCommandOptions, DefaultOptions) PASS
+TEST(UnityCommandOptions, OptionVerbose) PASS
+TEST(UnityCommandOptions, OptionSelectTestByGroup) PASS
+TEST(UnityCommandOptions, OptionSelectTestByName) PASS
+TEST(UnityCommandOptions, OptionSelectRepeatTestsDefaultCount) PASS
+TEST(UnityCommandOptions, OptionSelectRepeatTestsSpecificCount) PASS
+TEST(UnityCommandOptions, MultipleOptions) PASS
+TEST(UnityCommandOptions, MultipleOptionsDashRNotLastAndNoValueSpecified) PASS
+TEST(UnityCommandOptions, UnknownCommandIsIgnored) PASS
+TEST(UnityCommandOptions, GroupOrNameFilterWithoutStringFails) PASS
+TEST(UnityCommandOptions, GroupFilterReallyFilters) PASS
+IGNORE_TEST(UnityCommandOptions, TestShouldBeIgnored)
+TEST(LeakDetection, DetectsLeak) PASS
+TEST(LeakDetection, BufferOverrunFoundDuringFree) PASS
+TEST(LeakDetection, BufferOverrunFoundDuringRealloc) PASS
+TEST(LeakDetection, BufferGuardWriteFoundDuringFree) PASS
+TEST(LeakDetection, BufferGuardWriteFoundDuringRealloc) PASS
+TEST(LeakDetection, PointerSettingMax) PASS
+TEST(InternalMalloc, MallocPastBufferFails) PASS
+TEST(InternalMalloc, CallocPastBufferFails) PASS
+TEST(InternalMalloc, MallocThenReallocGrowsMemoryInPlace) PASS
+TEST(InternalMalloc, ReallocFailDoesNotFreeMem) PASS
+
+
+-----------------------
+33 Tests 0 Failures 1 Ignored 
+OK
