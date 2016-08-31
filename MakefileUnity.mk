@@ -18,8 +18,7 @@ UNITY_WARNINGFLAGS = -Wall -Werror -Wswitch-default
 #UNITY_WARNINGFLAGS += -Wshadow 
 
 SRC_DIRS = \
-#	$(PROJECT_HOME_DIR)/src/LedDriver \
-	$(PROJECT_HOME_DIR)/src/HomeAutomation
+	$(PROJECT_HOME_DIR)/src/FirstGroup
 
 UNITY_OBJS_DIR = \
 	$(PROJECT_HOME_DIR)/objs
@@ -41,8 +40,7 @@ INCLUDE_DIRS =\
   $(UNITY_HOME)/src\
   $(UNITY_HOME)/extras/fixture/src\
   $(UNITY_HOME)/extras/fixture/test\
-  $(PROJECT_HOME_DIR)/include/util\
-  $(PROJECT_HOME_DIR)/mocks\
+  $(PROJECT_HOME_DIR)/include/FirstGroup
   
 include $(UNITY_BUILD_HOME)/MakefileWorker.mk
 
