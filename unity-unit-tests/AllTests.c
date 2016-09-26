@@ -2,7 +2,8 @@
 
 static void RunAllTests(void)
 {
-	RUN_TEST_GROUP(UARTDriverGroup);
+	RUN_TEST_GROUP(systemSetupGroup);
+//	RUN_TEST_GROUP(UARTDriverGroup);
 }
 
 int main(int argc, const char **argv)

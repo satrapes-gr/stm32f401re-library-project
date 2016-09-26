@@ -2,6 +2,7 @@
 
 TEST_GROUP_RUNNER(UARTDriverGroup)
 {
-	RUN_TEST_CASE(UARTDriverGroup, FirstTest);
-	RUN_TEST_CASE(UARTDriverGroup, SecondTest);
+	RUN_TEST_CASE(UARTDriverGroup, AllPeripheralsOnRCCAPB1AreDisconnectedOnCreate);
+	RUN_TEST_CASE(UARTDriverGroup, Fail);
 }
+

@@ -1,8 +1,7 @@
 #include <stdint.h>
 #include "UARTDriver.h"
 
-int16_t add(int16_t x, int16_t y)
+void UARTDriver_Create(uint32_t * RCC_APB1ENR)
 {
-	return (x+y);
+	*RCC_APB1ENR = 0;
 }
-

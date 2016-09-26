@@ -14,12 +14,17 @@ TEST_TEAR_DOWN(UARTDriverGroup)
 	;
 }
 
-TEST(UARTDriverGroup, FirstTest)
+TEST(UARTDriverGroup, AllPeripheralsOnRCCAPB1AreDisconnectedOnCreate)
 {
-	TEST_ASSERT_TRUE(add(1,1) == 2);
+	uint32_t virtual_RCC_APB1ENR= 0x00000000;
+	UARTDriver_Create(&virtual_RCC_APB1ENR);
+	TEST_ASSERT_EQUAL_HEX32(0, virtual_RCC_APB1ENR);
+
 }
 
-TEST(UARTDriverGroup, SecondTest)
+TEST(UARTDriverGroup, Fail)
 {
-	TEST_ASSERT_TRUE(add(1,1) == 3);
+	TEST_ASSERT_EQUAL(0, 0);
 }
+
+

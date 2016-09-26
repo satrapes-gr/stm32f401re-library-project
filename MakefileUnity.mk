@@ -18,7 +18,8 @@ UNITY_WARNINGFLAGS = -Wall -Werror -Wswitch-default
 #UNITY_WARNINGFLAGS += -Wshadow 
 
 SRC_DIRS = \
-	$(PROJECT_HOME_DIR)/src/UARTDriver
+	$(PROJECT_HOME_DIR)/src/systemSetup\
+#	$(PROJECT_HOME_DIR)/src/UARTDriver
 
 UNITY_OBJS_DIR = \
 	$(PROJECT_HOME_DIR)/objs
@@ -28,7 +29,9 @@ TEST_SRC_DIRS = \
 	$(UNITY_HOME)/src\
     $(UNITY_HOME)/extras/fixture/src\
     $(UNITY_HOME)/extras/fixture/test\
-	$(PROJECT_TEST_DIR)/UARTDriver
+	$(PROJECT_TEST_DIR)/systemSetup\
+#	$(PROJECT_TEST_DIR)/UARTDriver
+
 
 
 
@@ -40,7 +43,7 @@ INCLUDE_DIRS =\
   $(UNITY_HOME)/src\
   $(UNITY_HOME)/extras/fixture/src\
   $(UNITY_HOME)/extras/fixture/test\
-  $(PROJECT_HOME_DIR)/include/UARTDriver
-  
+  $(PROJECT_HOME_DIR)/include/systemSetup\
+#  $(PROJECT_HOME_DIR)/include/UARTDriver
 include $(UNITY_BUILD_HOME)/MakefileWorker.mk
 
