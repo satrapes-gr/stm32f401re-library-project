@@ -14,14 +14,9 @@ TEST_TEAR_DOWN(systemSetupGroup)
 	;
 }
 
-TEST(systemSetupGroup, SelectPLLSource)
+TEST(systemSetupGroup, SelectClockHSI)
 {
-	uint32_t temp;
-	uint32_t virtualRCC_CR = 0xffffffff;
-	pll_source_mux_type pll_source_mux = HSI;
-	systemSetup(&virtualRCC_CR, pll_source_mux);
-	temp = virtualRCC_CR & 0x00000001;
-	TEST_ASSERT_EQUAL(temp, 0x00000001);
+	TEST_ASSERT_EQUAL(0, 0x00000001);
 }
 
 

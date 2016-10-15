@@ -2,6 +2,6 @@
 
 TEST_GROUP_RUNNER(systemSetupGroup)
 {
-	RUN_TEST_CASE(systemSetupGroup, SelectPLLSource);
+	RUN_TEST_CASE(systemSetupGroup, SelectClockHSI);
 }
 
