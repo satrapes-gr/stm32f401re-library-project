@@ -18,7 +18,7 @@ TEST(systemSetupGroup, SelectClockHSI)
 {
 	uint32_t virtualRCC_CR = 0xFFFFFFFF;
 	systemSetup(&virtualRCC_CR);
-	TEST_ASSERT_EQUAL(0, 0x00000001);
+	TEST_ASSERT_EQUAL(RCC_CR_HSION, 0x00000001);
 }
 
 

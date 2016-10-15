@@ -294,7 +294,7 @@ $(UNITY_OBJS_DIR)/%.o: %.cpp
 $(UNITY_OBJS_DIR)/%.o: %.c
 	@echo compiling $(notdir $<)
 	$(SILENCE)mkdir -p $(dir $@)
-	$(SILENCE)$(COMPILE.c) -MMD -MP  $(OUTPUT_OPTION) $<
+	$(SILENCE)$(COMPILE.c) -MMD -MP  $(CFLAGS) $(OUTPUT_OPTION) $<
 
 $(UNITY_OBJS_DIR)/%.o: %.s
 	@echo compiling $(notdir $<)
