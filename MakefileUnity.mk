@@ -20,6 +20,7 @@ STM32_CUBE_FW=~/programs/embedded/c/STM32Cube_FW_F4_V1.13.0
 
 SRC_DIRS = \
 	$(PROJECT_HOME_DIR)/src/systemSetup\
+	$(PROJECT_HOME_DIR)/src/io
 #	$(PROJECT_HOME_DIR)/src/UARTDriver
 
 UNITY_OBJS_DIR = \
@@ -45,6 +46,7 @@ INCLUDE_DIRS =\
   $(UNITY_HOME)/extras/fixture/src\
   $(UNITY_HOME)/extras/fixture/test\
   $(PROJECT_HOME_DIR)/include/systemSetup\
+  $(PROJECT_HOME_DIR)/include/io\
   $(STM32_CUBE_FW)/Drivers/CMSIS/Device/ST/STM32F4xx/Include\
   $(STM32_CUBE_FW)/Drivers/CMSIS/Include
 
