@@ -18,7 +18,7 @@
 
 extern "C"
 {
-#include "mockIo.h"
+#include "MockIO.h"
 }
 
 #include "CppUTest/TestHarness.h"
