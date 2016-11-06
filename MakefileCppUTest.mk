@@ -18,7 +18,7 @@ SRC_DIRS = \
 	src/util\
 	src/LedDriver \
 	src/dvr\
-	src/IO \
+	src/io \
 	src/MyOS \
 	src/MyOS/posix \
 	src/zune \
@@ -35,7 +35,7 @@ TEST_SRC_DIRS = \
 INCLUDE_DIRS =\
   .\
   $(CPPUTEST_HOME)/include\
-  include/IO\
+  include/io\
   mocks\
   include/util\
   include/HomeAutomation\
