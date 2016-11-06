@@ -26,7 +26,7 @@ SRC_DIRS = \
 TEST_SRC_DIRS = \
 	.\
 	mocks\
-	mocks\
+	mocks/io\
 	tests/LedDriver\
 	tests/stdio\
 	cpputest-unit-tests
