@@ -37,8 +37,8 @@ INCLUDE_DIRS =\
   $(CPPUTEST_HOME)/include\
   include/io\
   mocks\
-  include/util\
-  include/HomeAutomation\
+  include/systemSetup\
+  include/stm32f401re\
   include/LedDriver\
   include/MyOS\
   include/dvr\
@@ -47,7 +47,7 @@ INCLUDE_DIRS =\
 MOCKS_SRC_DIRS = \
 	mocks\
 	
-CPPUTEST_WARNINGFLAGS = -Wall -Wswitch-default -Werror 
+CPPUTEST_WARNINGFLAGS = -Wall -Wswitch-default -Werror -DSTM32F401xE
 #CPPUTEST_CFLAGS = -std=c89 
 CPPUTEST_CFLAGS += -Wall -Wstrict-prototypes -pedantic
 LD_LIBRARIES = -lpthread

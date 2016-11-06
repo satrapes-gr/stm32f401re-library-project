@@ -11,4 +11,3 @@ void systemSetup(uint32_t * address, uint32_t clock)
 {
 	*address |= clock;
 }
-
