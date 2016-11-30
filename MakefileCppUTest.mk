@@ -22,6 +22,7 @@ SRC_DIRS = \
 	src/MyOS \
 	src/MyOS/posix \
 	src/zune \
+	src/systemSetup
 
 TEST_SRC_DIRS = \
 	.\
