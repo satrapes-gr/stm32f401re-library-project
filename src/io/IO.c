@@ -25,13 +25,11 @@
 /*- ------------------------------------------------------------------ -*/
 
 #include "IO.h"
-void IO_Write(ioAddress addr, ioData data)
+void IO_Write(ioAddress *address, ioData data)
 {
-    ioData * p = 0;
-    *(p + addr) = data;
+    *address = data;
 }
-ioData IO_Read(ioAddress addr)
+ioData IO_Read(ioAddress *address)
 {
-    ioData * p = 0;
-    return *(p + addr);
+    return *address;
 }

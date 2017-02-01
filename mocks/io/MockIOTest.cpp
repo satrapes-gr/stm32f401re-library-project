@@ -79,9 +79,10 @@ TEST_GROUP(MockIOTemp)
 
 static void CanMatchExpectations()
 {
-    MockIO_Expect_ReadThenReturn(1,2);
-    MockIO_Expect_Write(1,2);
-    IO_Write(1,IO_Read(1));
+    ioAddress *virtual_address = 0x0;
+    MockIO_Expect_ReadThenReturn(virtual_address, 2);
+    MockIO_Expect_Write(virtual_address, 2);
+    IO_Write(virtual_address, IO_Read(virtual_address));
 }
 
 TEST(MockIO, CanMatchExpectations)
@@ -93,8 +94,8 @@ TEST(MockIO, CanMatchExpectations)
 
 static void WriteWhenReadExpectedFails()
 {
-    MockIO_Expect_ReadThenReturn(0,1);
-    IO_Write(0,0);
+    MockIO_Expect_ReadThenReturn(0, 1);
+    IO_Write(0, 0);
 }
 
 TEST(MockIO, WriteWhenReadExpectedFails)
@@ -106,7 +107,7 @@ TEST(MockIO, WriteWhenReadExpectedFails)
 
 static void ReadWhenWriteExpectedFails()
 {
-    MockIO_Expect_Write(0,1);
+    MockIO_Expect_Write(0, 1);
     IO_Read(0);
 }
 
@@ -119,9 +120,9 @@ TEST(MockIO, ReadWhenWriteExpectedFails)
 
 static void TooManyWriteExpectations()
 {
-    MockIO_Expect_Write(0,1);
-    MockIO_Expect_Write(0,1);
-    MockIO_Expect_Write(0,1);
+    MockIO_Expect_Write(0, 1);
+    MockIO_Expect_Write(0, 1);
+    MockIO_Expect_Write(0, 1);
 }
 
 TEST(MockIO, TooManyWriteExpectations)
@@ -132,9 +133,9 @@ TEST(MockIO, TooManyWriteExpectations)
 
 static void TooManyReadExpectations()
 {
-    MockIO_Expect_ReadThenReturn(0,0);
-    MockIO_Expect_ReadThenReturn(0,0);
-    MockIO_Expect_ReadThenReturn(0,0);
+    MockIO_Expect_ReadThenReturn(0, 0);
+    MockIO_Expect_ReadThenReturn(0, 0);
+    MockIO_Expect_ReadThenReturn(0, 0);
 }
 
 TEST(MockIO, TooManyReadExpectations)
@@ -147,7 +148,7 @@ TEST(MockIO, TooManyReadExpectations)
 static void notInitializedReadTest()
 {
     MockIO_Destroy();
-    MockIO_Expect_ReadThenReturn(0,0);
+    MockIO_Expect_ReadThenReturn(0, 0);
 }
 
 TEST(MockIO, NotInitializedTheRead)
@@ -159,7 +160,7 @@ TEST(MockIO, NotInitializedTheRead)
 static void notInitializedWriteTest()
 {
     MockIO_Destroy();
-    MockIO_Expect_Write(0,0);
+    MockIO_Expect_Write(0, 0);
 }
 
 TEST(MockIO, NotInitializedTheWrite)
@@ -170,8 +171,9 @@ TEST(MockIO, NotInitializedTheWrite)
 
 static void MismatchedWriteAddress()
 {
-    MockIO_Expect_Write(0,0);
-    IO_Write(0x10,0);
+    ioAddress *virtual_address = 0;
+    MockIO_Expect_Write(virtual_address, 0);
+    IO_Write((ioAddress *) 0x10, 0);
 }
 
 TEST(MockIO, MismatchedWriteAddress)
@@ -183,8 +185,8 @@ TEST(MockIO, MismatchedWriteAddress)
 
 static void MismatchedWriteData()
 {
-    MockIO_Expect_Write(0,0);
-    IO_Write(0,0xdead);
+    MockIO_Expect_Write(0, 0);
+    IO_Write(0, 0xdead);
 }
 
 TEST(MockIO, MismatchedWriteData)
@@ -196,8 +198,9 @@ TEST(MockIO, MismatchedWriteData)
 
 static void MismatchedReadAddress()
 {
-    MockIO_Expect_ReadThenReturn(0x1000,0xaaaa);
-    IO_Read(0x10000);
+    ioAddress *virtual_address = (ioAddress *) 0x1000;
+    MockIO_Expect_ReadThenReturn(virtual_address, 0xaaaa);
+    IO_Read((ioAddress *) 0x10000);
 }
 
 TEST(MockIO, MismatchedReadAddress)
@@ -209,31 +212,34 @@ TEST(MockIO, MismatchedReadAddress)
 
 static void TooManyReads()
 {
-    IO_Read(0x10000);
+    ioAddress *virtual_address = 0;
+    IO_Read(virtual_address);
 }
 
 TEST(MockIO, TooManyReads)
 {
   testFailureWith(TooManyReads);
-  fixture->assertPrintContains("No more expectations but was IO_Read(0x10000)");
+  fixture->assertPrintContains("No more expectations but was IO_Read(0x0)");
 }
 
 static void TooManyWrites()
 {
-    IO_Write(0x10000, 0x1234);
+    ioAddress *virtual_address = 0;
+    IO_Write(virtual_address, 0x1234);
 }
 
 TEST(MockIO, TooManyWrites)
 {
   testFailureWith(TooManyWrites);
   fixture->assertPrintContains(
-          "No more expectations but was IO_Write(0x10000, 0x1234)");
+          "No more expectations but was IO_Write(0x0, 0x1234)");
 }
 
 static void NotAllExpectationsUsed()
 {
-    MockIO_Expect_ReadThenReturn(0x1000,0xaaaa);
-    MockIO_Expect_Write(0x1000,0x5555);
+    ioAddress *virtual_address = 0;
+    MockIO_Expect_ReadThenReturn(virtual_address, 0xaaaa);
+    MockIO_Expect_Write(virtual_address, 0x5555);
     MockIO_Verify_Complete();
 }
 

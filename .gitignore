@@ -2,3 +2,9 @@
 lib/
 objs/
 unity-template_tests
+./.settings
+
+
+\.settings/
+
+BookCode_CppUTest_tests

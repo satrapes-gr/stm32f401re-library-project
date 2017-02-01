@@ -24,6 +24,9 @@
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1458353313" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.477161179" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base">
+								<option id="gnu.c.compiler.option.include.paths.1284159801" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f401re-library-project/include}&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.143683804" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.2144263365" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
@@ -69,6 +72,10 @@
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1144053174" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.1223643051" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base">
+								<option id="gnu.c.compiler.option.include.paths.680967032" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f401re-library-project/include/stm32f401re}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f401re-library-project/include/systemSetup}&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.325511121" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1641430221" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
@@ -83,11 +90,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.toolchain.gnu.base.1605988128.672914038.846373128" name="TemplateTest.cpp" rcbsApplicability="disable" resourcePath="cpputest-unit-tests/TemplateTest.cpp" toolsToInvoke="cdt.managedbuild.tool.gnu.cpp.compiler.base.1714052453.1575401420">
-						<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.1714052453.1575401420" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base.1714052453">
-							<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.730305577" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-						</tool>
-					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
@@ -114,6 +116,12 @@
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.base.1605988128;cdt.managedbuild.toolchain.gnu.base.1605988128.355369203;cdt.managedbuild.tool.gnu.c.compiler.base.477161179;cdt.managedbuild.tool.gnu.c.compiler.input.143683804">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.base.1605988128;cdt.managedbuild.toolchain.gnu.base.1605988128.355369203;cdt.managedbuild.tool.gnu.cpp.compiler.base.1338475293;cdt.managedbuild.tool.gnu.cpp.compiler.input.1458353313">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.901737985;ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.901737985.;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1863148414;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1224678343">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>

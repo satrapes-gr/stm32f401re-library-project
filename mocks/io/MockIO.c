@@ -44,7 +44,7 @@ enum
 typedef struct Expectation
 {
     int kind;
-    ioAddress addr;
+    ioAddress *address;
     ioData value;
 } Expectation;
 
@@ -119,24 +119,24 @@ static void failWhenNoRoomForExpectations(char * message)
         fail(message);
 }
 
-void recordExpectation(int kind, ioAddress addr, ioData data)
+void recordExpectation(int kind, ioAddress *address, ioData data)
 {
     expectations[setExpectationCount].kind = kind;
-    expectations[setExpectationCount].addr = addr;
+    expectations[setExpectationCount].address = address;
     expectations[setExpectationCount].value = data;
     setExpectationCount++;
 }
 
-void MockIO_Expect_Write(ioAddress addr, ioData value)
+void MockIO_Expect_Write(ioAddress *address, ioData value)
 {
     failWhenNoRoomForExpectations(report_too_many_write_expectations);
-    recordExpectation(FLASH_WRITE, addr, value);
+    recordExpectation(FLASH_WRITE, address, value);
 }
 
-void MockIO_Expect_ReadThenReturn(ioAddress addr, ioData value)
+void MockIO_Expect_ReadThenReturn(ioAddress *address, ioData value)
 {
     failWhenNoRoomForExpectations(report_too_many_read_expectations);
-    recordExpectation(FLASH_READ, addr, value);
+    recordExpectation(FLASH_READ, address, value);
 }
 
 static void failWhenNoUnusedExpectations(char * format)
@@ -149,16 +149,16 @@ static void failWhenNoUnusedExpectations(char * format)
         int offset = snprintf(message, size,
                 report_no_more_expectations, getExpectationCount + 1);
         snprintf(message + offset, size - offset,
-                format, actual.addr, actual.value);
+                format, actual.address, actual.value);
         fail(message);
     }
 }
 
-static void setExpectedAndActual(ioAddress addr, ioData value)
+static void setExpectedAndActual(ioAddress *address, ioData value)
 {
-    expected.addr = expectations[getExpectationCount].addr;
+    expected.address = expectations[getExpectationCount].address;
     expected.value = expectations[getExpectationCount].value;
-    actual.addr = addr;
+    actual.address = address;
     actual.value = value;
 }
 
@@ -169,8 +169,8 @@ static void failExpectation(char * expectationFailMessage)
     int offset = snprintf(message, size,
             report_expectation_number, getExpectationCount + 1);
     snprintf(message + offset, size - offset,
-            expectationFailMessage, expected.addr, expected.value,
-            actual.addr, actual.value);
+            expectationFailMessage, expected.address, expected.value,
+            actual.address, actual.value);
     fail(message);
 }
 
@@ -185,9 +185,9 @@ static int expectationIsNot(int kind)
     return kind != expectations[getExpectationCount].kind;
 }
 
-static int expectedAddressIsNot(ioAddress addr)
+static int expectedAddressIsNot(ioAddress *address)
 {
-    return expected.addr != addr;
+    return expected.address != address;
 }
 
 static int expectedDataIsNot(ioData data)
@@ -195,24 +195,24 @@ static int expectedDataIsNot(ioData data)
     return expected.value != data;
 }
 
-void IO_Write(ioAddress addr, ioData value)
+void IO_Write(ioAddress *address, ioData value)
 {
-    setExpectedAndActual(addr, value);
+    setExpectedAndActual(address, value);
     failWhenNotInitialized();
     failWhenNoUnusedExpectations(report_write_but_out_of_expectations);
     failWhen(expectationIsNot(FLASH_WRITE), report_expect_read_was_write);
-    failWhen(expectedAddressIsNot(addr), report_write_does_not_match);
+    failWhen(expectedAddressIsNot(address), report_write_does_not_match);
     failWhen(expectedDataIsNot(value), report_write_does_not_match);
     getExpectationCount++;
 }
 
-ioData IO_Read(ioAddress addr)
+ioData IO_Read(ioAddress *address)
 {
-    setExpectedAndActual(addr, NoExpectedValue);
+    setExpectedAndActual(address, NoExpectedValue);
     failWhenNotInitialized();
     failWhenNoUnusedExpectations(report_read_but_out_of_expectations);
     failWhen(expectationIsNot(FLASH_READ), report_expect_write_was_read);
-    failWhen(expectedAddressIsNot(addr), report_read_wrong_address);
+    failWhen(expectedAddressIsNot(address), report_read_wrong_address);
 
     return expectations[getExpectationCount++].value;
 }
