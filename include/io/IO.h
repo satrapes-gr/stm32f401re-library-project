@@ -31,7 +31,7 @@
 #include <stdint.h>
 
 typedef uint32_t ioAddress;
-typedef uint16_t ioData;
+typedef uint32_t ioData;
 
 ioData IO_Read(ioAddress *address);
 void  IO_Write(ioAddress *address, ioData data);

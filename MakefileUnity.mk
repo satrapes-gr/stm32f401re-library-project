@@ -19,26 +19,26 @@ UNITY_WARNINGFLAGS = -Wall -Werror -Wswitch-default
 STM32_CUBE_FW=~/programs/embedded/c/STM32Cube_FW_F4_V1.13.0
 
 SRC_DIRS = \
-	$(PROJECT_HOME_DIR)/src/systemSetup\
-	$(PROJECT_HOME_DIR)/src/io
-#	$(PROJECT_HOME_DIR)/src/UARTDriver
+    $(PROJECT_HOME_DIR)/src/systemSetup\
+    $(PROJECT_HOME_DIR)/src/io
+#    $(PROJECT_HOME_DIR)/src/UARTDriver
 
 UNITY_OBJS_DIR = \
-	$(PROJECT_HOME_DIR)/objs
+    $(PROJECT_HOME_DIR)/objs
 
 TEST_SRC_DIRS = \
-	$(PROJECT_TEST_DIR)\
-	$(UNITY_HOME)/src\
+    $(PROJECT_TEST_DIR)\
+    $(UNITY_HOME)/src\
     $(UNITY_HOME)/extras/fixture/src\
     $(UNITY_HOME)/extras/fixture/test\
-	$(PROJECT_TEST_DIR)/systemSetup\
-#	$(PROJECT_TEST_DIR)/UARTDriver
+    $(PROJECT_TEST_DIR)/systemSetup\
+#    $(PROJECT_TEST_DIR)/UARTDriver
 
 
 
 
 MOCKS_SRC_DIRS = \
-	$(PROJECT_TEST_DIR)/mocks\
+    $(PROJECT_TEST_DIR)/mocks\
 
 INCLUDE_DIRS =\
   .\

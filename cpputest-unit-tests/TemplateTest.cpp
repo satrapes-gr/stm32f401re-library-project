@@ -27,12 +27,12 @@ TEST_GROUP(Template)
 {
     void setup()
     {
-    	;
+        ;
     }
 
     void teardown()
     {
-    	;
+        ;
     }
 };
 
