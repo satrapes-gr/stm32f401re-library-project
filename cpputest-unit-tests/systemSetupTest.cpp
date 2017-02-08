@@ -43,12 +43,12 @@ TEST_GROUP(systemSetup)
     }
 };
 
-TEST(systemSetup, TestClockEnable)
+TEST(systemSetup, TestClockEnableSuccess)
 {
-    uint8_t result;
+    setup_error_t result;
     ioData virtualRCC_APB1ClockEnableRegister = (ioData) 0x0;
-    ioData virtualPWR_ControlRegister = (ioData) 0x0;
-    ioData virtualRCC_CRRegister = (ioData) 0x0;
+//    ioData virtualPWR_ControlRegister = (ioData) 0x0;
+//    ioData virtualRCC_CRRegister = (ioData) 0x0;
 
     /* Setup mock expectations */
     /* Read RCC_APB1ClockEnableRegister and enable clock */
@@ -60,26 +60,48 @@ TEST(systemSetup, TestClockEnable)
     MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
                                  (ioData) virtualRCC_APB1ClockEnableRegister | RCC_APB1LPENR_PWRLPEN);
 
-    /* Read PWR_ControlRegister and enable power */
-    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
-                                 (ioData) virtualPWR_ControlRegister);
-    MockIO_Expect_Write((ioAddress *) &virtualPWR_ControlRegister,
-                         virtualPWR_ControlRegister | PWR_CR_VOS_1);
-    /* Check that the power was enabled */
-    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
-                                 (ioData) virtualPWR_ControlRegister | PWR_CR_VOS_1);
+//    /* Read PWR_ControlRegister and enable power */
+//    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
+//                                 (ioData) virtualPWR_ControlRegister);
+//    MockIO_Expect_Write((ioAddress *) &virtualPWR_ControlRegister,
+//                         virtualPWR_ControlRegister | PWR_CR_VOS_1);
+//    /* Check that the power was enabled */
+//    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
+//                                 (ioData) virtualPWR_ControlRegister | PWR_CR_VOS_1);
 
 //    /* Read RCC_APB1ClockEnableRegister to verify that the clock has been enabled */
 //    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
 //                        virtualRCC_APB1ClockEnableRegister | RCC_APB1LPENR_PWRLPEN);
 
     /* Run code */
-    result = systemSetup((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
-            (ioAddress *) &virtualPWR_ControlRegister, (ioAddress *) &virtualRCC_CRRegister,
-            RCC_APB1LPENR_PWRLPEN, PWR_CR_VOS_1);
+//    result = systemSetup((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
+//            (ioAddress *) &virtualPWR_ControlRegister, (ioAddress *) &virtualRCC_CRRegister,
+//            RCC_APB1LPENR_PWRLPEN, PWR_CR_VOS_1);
+    result = enablePowerInterface((ioAddress *) &virtualRCC_APB1ClockEnableRegister);
 
     /* Check that the clock has been enabled */
-    LONGS_EQUAL(result, 0x3);
+    LONGS_EQUAL(result, SYSTEM_SETUP_SUCCESS);
+}
+
+TEST(systemSetup, TestClockEnableFailure)
+{
+    setup_error_t result;
+    ioData virtualRCC_APB1ClockEnableRegister = (ioData) 0x0;
+
+    /* Setup mock expectations */
+    /* Read RCC_APB1ClockEnableRegister and enable clock */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
+                                 (ioData) virtualRCC_APB1ClockEnableRegister);
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
+                        virtualRCC_APB1ClockEnableRegister | RCC_APB1LPENR_PWRLPEN);
+    /* Check that clock was indeed set */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
+                                 ((ioData) virtualRCC_APB1ClockEnableRegister & (!RCC_APB1LPENR_PWRLPEN)));
+
+    result = enablePowerInterface((ioAddress *) &virtualRCC_APB1ClockEnableRegister);
+
+    /* Check that the clock has been enabled */
+    LONGS_EQUAL(result, ERROR_POWER_INTERFACE_SETUP_FAILED);
 }
 
 //TEST(systemSetup, TestSetRegulatorVoltageScale)
