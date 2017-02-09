@@ -104,6 +104,35 @@ TEST(systemSetup, TestClockEnableFailure)
     LONGS_EQUAL(result, ERROR_POWER_INTERFACE_SETUP_FAILED);
 }
 
+TEST(systemSetup, TestSetRegulatorVoltageScaleIncorrectMode)
+{
+    setup_error_t result;
+    ioData virtualPWR_ControlRegister = (ioData) 0x0;
+    ioData virtualRCC_CRRegister = (ioData) 0xB;
+
+    /* Setup mock expectations */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
+                                 (ioData) virtualRCC_APB1ClockEnableRegister);
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
+                        virtualRCC_APB1ClockEnableRegister | RCC_APB1LPENR_PWRLPEN);
+
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
+                                 (ioData) virtualPWR_ControlRegister);
+    MockIO_Expect_Write((ioAddress *) &virtualPWR_ControlRegister,
+                         virtualPWR_ControlRegister | PWR_CR_VOS_1);
+    printf("before\n");
+    printf("virtualRCC_APB1ClockEnableRegister= %d\nvirtualPWR_ControlRegister=%d\nvirtualRCC_CRRegister= %d\n",
+            (int) virtualRCC_APB1ClockEnableRegister, (int) virtualPWR_ControlRegister,
+            (int) virtualRCC_CRRegister);
+    systemSetup((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
+            (ioAddress *) &virtualPWR_ControlRegister, (ioAddress *) &virtualRCC_CRRegister,
+            RCC_APB1LPENR_PWRLPEN, PWR_CR_VOS_1);
+    printf("after\n");
+    printf("virtualRCC_APB1ClockEnableRegister= %d\nvirtualPWR_ControlRegister=%d\nvirtualRCC_CRRegister= %d\n",
+            (int) virtualRCC_APB1ClockEnableRegister, (int) virtualPWR_ControlRegister,
+            (int) virtualRCC_CRRegister);
+    CHECK_EQUAL(virtualPWR_ControlRegister, 0x00008000);
+}
 //TEST(systemSetup, TestSetRegulatorVoltageScale)
 //{
 //    ioData virtualRCC_APB1ClockEnableRegister = (ioData) 0xF;
