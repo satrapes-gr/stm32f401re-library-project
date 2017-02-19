@@ -80,6 +80,18 @@ setup_error_t selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_
     /* TODO: check that pll is off */
     /* TODO: should there be a check that the address is correct? */
     ioData temp;
+
+    /* Check that PLL is off before proceeding */
+    temp = IO_Read(rcc_cr_address);
+    if (!(temp & RCC_CR_PLLON))
+    {
+        /* Unable to set VOS scale mode as PLL is On */
+        return ERROR_VOS_PLL_IS_ON;
+    }
+
+    /* Assert PLL is off */
+    assert(!(temp & RCC_CR_PLLON));
+
     /* Check arguments valid modes are 1 (Scale 3 mode) and 2 (Scale 2 mode) */
     if (vos < 1 || vos > 2)
     {
@@ -88,16 +100,6 @@ setup_error_t selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_
 
     /* Assert valid mode */
     assert((vos == 1) || (vos == 2));
-
-    /* Check that PLL is off before proceeding */
-    temp = IO_Read(rcc_cr_address);
-    if (!(temp & RCC_CR_PLLON))
-    {
-        return ERROR_VOS_PLL_IS_ON;
-    }
-
-    /* Assert PLL is off */
-    assert(!(temp & RCC_CR_PLLON));
 
     /* Set VOS mode */
     /* TODO: Verify scaling mode when PLL is turned on */
