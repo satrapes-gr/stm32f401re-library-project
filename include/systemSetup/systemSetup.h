@@ -10,7 +10,7 @@ typedef enum {
                 SYSTEM_SETUP_SUCCESS = 0,
                 ERROR_POWER_INTERFACE_SETUP_FAILED,
                 ERROR_VOS_PLL_IS_ON,
-                ERROR_VOS_WRONG_MODE,
+                ERROR_VOS_INCORRECT_MODE,
                 ERROR_VOS_SETUP_FAILED,
              } setup_error_t;
 

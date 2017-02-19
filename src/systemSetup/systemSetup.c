@@ -76,14 +76,14 @@ setup_error_t enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
 setup_error_t selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_address,
                                    voltage_scale_t vos)
 {
-    /* TODO: check that value is correct invalid vos */
     /* TODO: check that pll is off */
+    /* TODO: check that value is correct invalid vos */
     /* TODO: should there be a check that the address is correct? */
     ioData temp;
 
     /* Check that PLL is off before proceeding */
     temp = IO_Read(rcc_cr_address);
-    if (!(temp & RCC_CR_PLLON))
+    if (temp & RCC_CR_PLLON)
     {
         /* Unable to set VOS scale mode as PLL is On */
         return ERROR_VOS_PLL_IS_ON;
@@ -91,11 +91,10 @@ setup_error_t selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_
 
     /* Assert PLL is off */
     assert(!(temp & RCC_CR_PLLON));
-
     /* Check arguments valid modes are 1 (Scale 3 mode) and 2 (Scale 2 mode) */
     if (vos < 1 || vos > 2)
     {
-        return ERROR_VOS_WRONG_MODE;
+        return ERROR_VOS_INCORRECT_MODE;
     }
 
     /* Assert valid mode */

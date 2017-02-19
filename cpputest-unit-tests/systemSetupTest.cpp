@@ -95,7 +95,7 @@ TEST(systemSetup, TestSetRegulatorPLLIsOn)
 {
     setup_error_t result;
     ioData virtualPWR_ControlRegister = (ioData) 0x0;
-    ioData virtualRCC_CRRegister = (ioData) 0xB;
+    ioData virtualRCC_CRRegister = (ioData) RCC_CR_PLLON;
 
     /* Setup mock expectations */
     MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CRRegister,
@@ -106,6 +106,27 @@ TEST(systemSetup, TestSetRegulatorPLLIsOn)
                                   (ioAddress *) &virtualRCC_CRRegister, (voltage_scale_t) SCALE_2);
 
     CHECK_EQUAL(result, ERROR_VOS_PLL_IS_ON);
+}
+
+/*
+ * This test will call selectVoltageScaling function and fail because the VOS scale mode is going to
+ * be incorrect..
+ */
+TEST(systemSetup, TestSetRegulatorInvalidVOSMode)
+{
+    setup_error_t result;
+    ioData virtualPWR_ControlRegister = (ioData) 0x0;
+    ioData virtualRCC_CRRegister = (ioData) 0xB;    /* PLL is off */
+
+    /* Setup mock expectations */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CRRegister,
+                                 (ioData) virtualRCC_CRRegister);
+
+    /* Run code */
+    result = selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
+                                  (ioAddress *) &virtualRCC_CRRegister, (voltage_scale_t) 3);
+
+    CHECK_EQUAL(result, ERROR_VOS_INCORRECT_MODE);
 }
 
 //
