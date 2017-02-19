@@ -76,8 +76,6 @@ setup_error_t enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
 setup_error_t selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_address,
                                    voltage_scale_t vos)
 {
-    /* TODO: check that pll is off */
-    /* TODO: check that value is correct invalid vos */
     /* TODO: should there be a check that the address is correct? */
     ioData temp;
 
@@ -103,8 +101,11 @@ setup_error_t selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_
     /* Set VOS mode */
     /* TODO: Verify scaling mode when PLL is turned on */
     /* TODO: Improve bit setting expressions */
+
     temp = IO_Read(pwr_cr_address);
+
     IO_Write(pwr_cr_address, (temp | (vos << 14)));
+
     temp = (IO_Read(pwr_cr_address) & PWR_CR_VOS) >> 14;
     if (!((temp == 1) && (vos == 1)) || ((temp == 2) && (vos == 2)))
     {

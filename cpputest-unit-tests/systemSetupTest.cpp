@@ -95,7 +95,7 @@ TEST(systemSetup, TestSetRegulatorPLLIsOn)
 {
     setup_error_t result;
     ioData virtualPWR_ControlRegister = (ioData) 0x0;
-    ioData virtualRCC_CRRegister = (ioData) RCC_CR_PLLON;
+    ioData virtualRCC_CRRegister = (ioData) RCC_CR_PLLON;   /* Random value with PLL On */
 
     /* Setup mock expectations */
     MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CRRegister,
@@ -116,7 +116,7 @@ TEST(systemSetup, TestSetRegulatorInvalidVOSMode)
 {
     setup_error_t result;
     ioData virtualPWR_ControlRegister = (ioData) 0x0;
-    ioData virtualRCC_CRRegister = (ioData) 0xB;    /* PLL is off */
+    ioData virtualRCC_CRRegister = (ioData) 0xB;    /* Random value with PLL off */
 
     /* Setup mock expectations */
     MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CRRegister,
@@ -129,53 +129,73 @@ TEST(systemSetup, TestSetRegulatorInvalidVOSMode)
     CHECK_EQUAL(result, ERROR_VOS_INCORRECT_MODE);
 }
 
-//
-//    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
-//                                 (ioData) virtualPWR_ControlRegister);
-//    MockIO_Expect_Write((ioAddress *) &virtualPWR_ControlRegister,
-//                         virtualPWR_ControlRegister | PWR_CR_VOS_1);
-//    printf("before\n");
-//    printf("virtualRCC_APB1ClockEnableRegister= %d\nvirtualPWR_ControlRegister=%d\nvirtualRCC_CRRegister= %d\n",
-//            (int) virtualRCC_APB1ClockEnableRegister, (int) virtualPWR_ControlRegister,
-//            (int) virtualRCC_CRRegister);
-//    result = systemSetup((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
-//            (ioAddress *) &virtualPWR_ControlRegister, (ioAddress *) &virtualRCC_CRRegister,
-//            RCC_APB1LPENR_PWRLPEN, PWR_CR_VOS_1);
-//    printf("after\n");
-//    printf("virtualRCC_APB1ClockEnableRegister= %d\nvirtualPWR_ControlRegister=%d\nvirtualRCC_CRRegister= %d\n",
-//            (int) virtualRCC_APB1ClockEnableRegister, (int) virtualPWR_ControlRegister,
-//            (int) virtualRCC_CRRegister);
-////    CHECK_EQUAL(virtualPWR_ControlRegister, 0x00008000);
-//    CHECK_EQUAL(virtualPWR_ControlRegister, result);
-//TEST(systemSetup, TestSetRegulatorVoltageScale)
-//{
-//    ioData virtualRCC_APB1ClockEnableRegister = (ioData) 0xF;
-//    ioData virtualPWR_ControlRegister = (ioData) 0xA;
-//    ioData virtualRCC_CRRegister = (ioData) 0xB;
-//
-//    /* Setup mock expectations */
-//    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
-//                                 (ioData) virtualRCC_APB1ClockEnableRegister);
-//    MockIO_Expect_Write((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
-//                        virtualRCC_APB1ClockEnableRegister | RCC_APB1LPENR_PWRLPEN);
-//
-//    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
-//                                 (ioData) virtualPWR_ControlRegister);
-//    MockIO_Expect_Write((ioAddress *) &virtualPWR_ControlRegister,
-//                         virtualPWR_ControlRegister | PWR_CR_VOS_1);
-//    printf("before\n");
-//    printf("virtualRCC_APB1ClockEnableRegister= %d\nvirtualPWR_ControlRegister=%d\nvirtualRCC_CRRegister= %d\n",
-//            (int) virtualRCC_APB1ClockEnableRegister, (int) virtualPWR_ControlRegister,
-//            (int) virtualRCC_CRRegister);
-//    systemSetup((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
-//            (ioAddress *) &virtualPWR_ControlRegister, (ioAddress *) &virtualRCC_CRRegister,
-//            RCC_APB1LPENR_PWRLPEN, PWR_CR_VOS_1);
-//    printf("after\n");
-//    printf("virtualRCC_APB1ClockEnableRegister= %d\nvirtualPWR_ControlRegister=%d\nvirtualRCC_CRRegister= %d\n",
-//            (int) virtualRCC_APB1ClockEnableRegister, (int) virtualPWR_ControlRegister,
-//            (int) virtualRCC_CRRegister);
-//    CHECK_EQUAL(virtualPWR_ControlRegister, 0x00008000);
-//}
+/*
+ * This test will call selectVoltageScaling function and check that it was written correctly. It
+ * will then return a successful status code.
+ */
+TEST(systemSetup, TestSetRegulatorValidVOSModeCorrectlyWritten)
+{
+    setup_error_t result;
+    voltage_scale_t vos = SCALE_3;
+    ioData virtualPWR_ControlRegister = (ioData) 0x0;
+    ioData virtualRCC_CRRegister = (ioData) 0xB;    /* Random value with PLL off */
+
+    /* Setup mock expectations */
+    /* PLL is Off */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CRRegister,
+                                 (ioData) virtualRCC_CRRegister);
+
+    /* Set vos value in pwr_cr register */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
+                                 (ioData) virtualPWR_ControlRegister);
+
+    MockIO_Expect_Write((ioAddress *) &virtualPWR_ControlRegister,
+                        (ioData) virtualPWR_ControlRegister | (vos << 14));
+
+    /* Check it actually set the correct value */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
+                                 (ioData) virtualPWR_ControlRegister | (vos << 14));
+
+    /* Run code */
+    result = selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
+                                  (ioAddress *) &virtualRCC_CRRegister, vos);
+
+    CHECK_EQUAL(result, SYSTEM_SETUP_SUCCESS);
+}
+
+/*
+ * This test will call selectVoltageScaling function and check that it was written incorrectly. It
+ * will then return the appropriate error code.
+ */
+TEST(systemSetup, TestSetRegulatorValidVOSModeIncorrectlyWritten)
+{
+    setup_error_t result;
+    voltage_scale_t vos = SCALE_3;
+    ioData virtualPWR_ControlRegister = (ioData) 0x0;
+    ioData virtualRCC_CRRegister = (ioData) 0xB;    /* Random value with PLL off */
+
+    /* Setup mock expectations */
+    /* PLL is Off */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CRRegister,
+                                 (ioData) virtualRCC_CRRegister);
+
+    /* Set vos value in pwr_cr register */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
+                                 (ioData) virtualPWR_ControlRegister);
+
+    MockIO_Expect_Write((ioAddress *) &virtualPWR_ControlRegister,
+                        (ioData) virtualPWR_ControlRegister | (vos << 14));
+
+    /* Check it actually set the correct value */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualPWR_ControlRegister,
+                                 (ioData) 0);
+
+    /* Run code */
+    result = selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
+                                  (ioAddress *) &virtualRCC_CRRegister, vos);
+
+    CHECK_EQUAL(result, ERROR_VOS_SETUP_FAILED);
+}
 
 //TEST(systemSetup, WaitUntilHSIReady)
 //{
