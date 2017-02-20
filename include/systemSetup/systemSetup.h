@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <assert.h>
 
+#define VOS_BITS_LOCATION (14)
+
 typedef enum {
                 SYSTEM_SETUP_SUCCESS = 0,
                 ERROR_POWER_INTERFACE_SETUP_FAILED,

@@ -12,15 +12,7 @@ setup_error_t systemSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_ad
         ioAddress *rcc_cr_address, uint32_t clock, uint32_t voltage_scaling_output_selection)
 {
     setup_error_t result;
-//    bool output_flag = true;
 
-//    temporary = IO_Read(rcc_apb1lpenr_address);
-//    IO_Write(rcc_apb1lpenr_address, temporary | RCC_APB1LPENR_PWRLPEN);
-//    if (IO_Read(rcc_apb1lpenr_address) | RCC_APB1LPENR_PWRLPEN) {
-//        /* Toggle status flag */
-//        output_flag = output_flag | i;
-//        i = i << 1;
-//    }
     /* Enable power interface */
     result = enablePowerInterface(rcc_apb1lpenr_address);
 
@@ -34,30 +26,18 @@ setup_error_t systemSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_ad
     assert(result != ERROR_POWER_INTERFACE_SETUP_FAILED);
 
     /* Select voltage scaling */
-    result = selectVoltageScaling(pwr_cr_address, rcc_cr_address, SCALE_2);
-//    result = IO_Read(pwr_cr_address);
-//    IO_Write(pwr_cr_address, result | PWR_CR_VOS_1);
-//    if (IO_Read(pwr_cr_address) | PWR_CR_VOS_1) {
-//        /* Toggle status flag */
-//        output_flag = output_flag | i;
-//        i = i << 1;
-//    }
-//    if (output_flag== true)
-//    {
-//        return
-//    }
-    return result;
+    result = selectVoltageScaling(pwr_cr_address, rcc_cr_address, voltage_scaling_output_selection);
 
-//bool
-//    /* Wait until HSI ready */
-//    do {
-//        temporary = IO_Read(rcc_cr_address);
-//        temporary = temporary & RCC_CR_HSIRDY;
-//    } while (temporary == 0);
+    /* Wait until HSI is ready */
+//    while ((RCC->CR & RCC_CR_HSIRDY) == 0);
+    while ((IO_Read(rcc_cr_address) & RCC_CR_HSIRDY) == 0);
+
+    return result;
 }
 
 setup_error_t enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
 {
+    /* TODO: I should add a clock variable it is already in the systemSetup */
     ioData temporary;
 
     temporary = IO_Read(rcc_apb1lpenr_address);
@@ -104,9 +84,9 @@ setup_error_t selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_
 
     temp = IO_Read(pwr_cr_address);
 
-    IO_Write(pwr_cr_address, (temp | (vos << 14)));
+    IO_Write(pwr_cr_address, (temp | (vos << VOS_BITS_LOCATION)));
 
-    temp = (IO_Read(pwr_cr_address) & PWR_CR_VOS) >> 14;
+    temp = (IO_Read(pwr_cr_address) & PWR_CR_VOS) >> VOS_BITS_LOCATION;
     if (!((temp == 1) && (vos == 1)) || ((temp == 2) && (vos == 2)))
     {
         return ERROR_VOS_SETUP_FAILED;
