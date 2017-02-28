@@ -21,7 +21,7 @@
 
 extern "C"
 {
-#include "systemSetup.h"
+#include "rccSetup.h"
 #include "MockIO.h"
 #include <stdio.h>
 }
@@ -31,7 +31,7 @@ extern "C"
 #define INCORRECT_VOS_VALUE (0x0000C000)
 #define INVALID_VOS_MODE (3)
 
-TEST_GROUP(systemSetup)
+TEST_GROUP(rccSetup)
 {
     void setup()
     {
@@ -47,7 +47,7 @@ TEST_GROUP(systemSetup)
 
 
 /* TODO: Invert expected and actual values in tests. Expected should come first and actual second */
-TEST(systemSetup, TestClockEnableSuccess)
+TEST(rccSetup, TestClockEnableSuccess)
 {
     setup_error_t result;
     ioData virtualRCC_APB1ClockEnableRegister = (ioData) 0x0;
@@ -66,10 +66,10 @@ TEST(systemSetup, TestClockEnableSuccess)
     result = __enablePowerInterface((ioAddress *) &virtualRCC_APB1ClockEnableRegister);
 
     /* Check that the clock has been enabled */
-    LONGS_EQUAL(result, SYSTEM_SETUP_SUCCESS);
+    LONGS_EQUAL(result, RCC_SETUP_SUCCESS);
 }
 
-TEST(systemSetup, TestClockEnableFailure)
+TEST(rccSetup, TestClockEnableFailure)
 {
     setup_error_t result;
     ioData virtualRCC_APB1ClockEnableRegister = (ioData) 0x0;
@@ -95,7 +95,7 @@ TEST(systemSetup, TestClockEnableFailure)
  * This test will call selectVoltageScaling function and fail because the PLL is On when we try to
  * modify the contents of the VOS bits.
  */
-TEST(systemSetup, TestSetRegulatorPLLIsOn)
+TEST(rccSetup, TestSetRegulatorPLLIsOn)
 {
     setup_error_t result;
     ioData virtualPWR_ControlRegister = (ioData) 0x0;
@@ -116,7 +116,7 @@ TEST(systemSetup, TestSetRegulatorPLLIsOn)
  * This test will call selectVoltageScaling function and fail because the VOS scale mode is going to
  * be incorrect..
  */
-TEST(systemSetup, TestSetRegulatorInvalidVOSMode)
+TEST(rccSetup, TestSetRegulatorInvalidVOSMode)
 {
     setup_error_t result;
     ioData virtualPWR_ControlRegister = (ioData) 0x0;
@@ -138,7 +138,7 @@ TEST(systemSetup, TestSetRegulatorInvalidVOSMode)
  * This test will call selectVoltageScaling function and check that it was written correctly. It
  * will then return a successful status code.
  */
-TEST(systemSetup, TestSetRegulatorValidVOSModeCorrectlyWritten)
+TEST(rccSetup, TestSetRegulatorValidVOSModeCorrectlyWritten)
 {
     setup_error_t result;
     voltage_scale_t vos = SCALE_3;
@@ -165,14 +165,14 @@ TEST(systemSetup, TestSetRegulatorValidVOSModeCorrectlyWritten)
     result = __selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
                                   (ioAddress *) &virtualRCC_CRRegister, vos);
 
-    CHECK_EQUAL(result, SYSTEM_SETUP_SUCCESS);
+    CHECK_EQUAL(result, RCC_SETUP_SUCCESS);
 }
 
 /*
  * This test will call selectVoltageScaling function and check that it was written incorrectly. It
  * will then return the appropriate error code.
  */
-TEST(systemSetup, TestSetRegulatorValidVOSModeIncorrectlyWritten)
+TEST(rccSetup, TestSetRegulatorValidVOSModeIncorrectlyWritten)
 {
     setup_error_t result;
     voltage_scale_t vos = SCALE_3;
@@ -202,7 +202,7 @@ TEST(systemSetup, TestSetRegulatorValidVOSModeIncorrectlyWritten)
     CHECK_EQUAL(result, ERROR_VOS_SETUP_FAILED);
 }
 
-TEST(systemSetup, WaitUntilHSIReady)
+TEST(rccSetup, WaitUntilHSIReady)
 {
     /* Read RCC->CR & RCC_CR_HSIRDY many times until it becomes one */
     uint16_t i;
@@ -245,10 +245,10 @@ TEST(systemSetup, WaitUntilHSIReady)
     }
     /* Indicate that HSI is ready */
     MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CRRegister, (ioData) RCC_CR_HSIRDY);
-    result = systemSetup((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
+    result = rccSetup((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
             (ioAddress *) &virtualPWR_ControlRegister, (ioAddress *) &virtualRCC_CRRegister,
             RCC_APB1LPENR_PWRLPEN, SCALE_3);
-    CHECK_EQUAL(SYSTEM_SETUP_SUCCESS, result);
+    CHECK_EQUAL(RCC_SETUP_SUCCESS, result);
 }
 
 

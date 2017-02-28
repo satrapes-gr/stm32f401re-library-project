@@ -1,5 +1,5 @@
 //#include <stdint.h>
-#include "systemSetup.h"
+#include "rccSetup.h"
 
 //int global_uninit;
 //int global_init = 0;
@@ -8,7 +8,7 @@
 
 //static uint8_t select
 
-setup_error_t systemSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_address,
+setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_address,
         ioAddress *rcc_cr_address, uint32_t clock, uint32_t voltage_scaling_output_selection)
 {
     setup_error_t result;
@@ -17,7 +17,7 @@ setup_error_t systemSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_ad
     result = __enablePowerInterface(rcc_apb1lpenr_address);
 
     /* Check output and fail early */
-    if (result != SYSTEM_SETUP_SUCCESS) {
+    if (result != RCC_SETUP_SUCCESS) {
         return result;
     }
     /* TODO: Figure out how to deal with asserts. Maybe have a DEBUG and a RELEASE build but to do
@@ -38,7 +38,7 @@ setup_error_t systemSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_ad
 
 setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
 {
-    /* TODO: I should add a clock variable it is already in the systemSetup */
+    /* TODO: I should add a clock variable it is already in the rccSetup */
     ioData temporary;
 
     temporary = IO_Read(rcc_apb1lpenr_address);
@@ -50,7 +50,7 @@ setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
     {
         return ERROR_POWER_INTERFACE_SETUP_FAILED;
     } else {
-        return SYSTEM_SETUP_SUCCESS;
+        return RCC_SETUP_SUCCESS;
     }
 }
 
@@ -92,6 +92,6 @@ setup_error_t __selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_c
     {
         return ERROR_VOS_SETUP_FAILED;
     } else {
-        return SYSTEM_SETUP_SUCCESS;
+        return RCC_SETUP_SUCCESS;
     }
 }

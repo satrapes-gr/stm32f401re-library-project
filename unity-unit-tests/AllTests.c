@@ -2,7 +2,7 @@
 
 static void RunAllTests(void)
 {
-	RUN_TEST_GROUP(systemSetupGroup);
+	RUN_TEST_GROUP(rccSetupGroup);
 //	RUN_TEST_GROUP(UARTDriverGroup);
 }
 

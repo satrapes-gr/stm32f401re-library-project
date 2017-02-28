@@ -1,7 +1,7 @@
 #include "unity_fixture.h"
 
-TEST_GROUP_RUNNER(systemSetupGroup)
+TEST_GROUP_RUNNER(rccSetupGroup)
 {
-	RUN_TEST_CASE(systemSetupGroup, SelectClockHSI);
+	RUN_TEST_CASE(rccSetupGroup, SelectClockHSI);
 }
 

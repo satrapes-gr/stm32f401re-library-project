@@ -1,5 +1,5 @@
-#ifndef SYSTEMSETUP_H
-#define SYSTEMSETUP_H
+#ifndef RCCSETUP_H
+#define RCCSETUP_H
 #include "stm32f4xx.h"
 #include "IO.h"
 
@@ -9,7 +9,7 @@
 #define VOS_BITS_LOCATION (14)
 
 typedef enum {
-                SYSTEM_SETUP_SUCCESS = 0,
+                RCC_SETUP_SUCCESS = 0,
                 ERROR_POWER_INTERFACE_SETUP_FAILED,
                 ERROR_VOS_PLL_IS_ON,
                 ERROR_VOS_INCORRECT_MODE,
@@ -21,7 +21,7 @@ typedef enum {
                 SCALE_3 = 1,
 } voltage_scale_t;
 
-setup_error_t systemSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_address,
+setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_address,
         ioAddress *rcc_cr_address, uint32_t clock, uint32_t voltage_scaling_output_selection);
 
 /**
@@ -47,4 +47,4 @@ setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address);
 /* TODO: Check what scale 2 and scale 3 mean */
 setup_error_t __selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_address,
                                    voltage_scale_t vos);
-#endif /* SYSTEMSETUP_H */
+#endif /* RCCSETUP_H */
