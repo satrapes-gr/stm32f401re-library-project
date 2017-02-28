@@ -14,7 +14,7 @@ setup_error_t systemSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_ad
     setup_error_t result;
 
     /* Enable power interface */
-    result = enablePowerInterface(rcc_apb1lpenr_address);
+    result = __enablePowerInterface(rcc_apb1lpenr_address);
 
     /* Check output and fail early */
     if (result != SYSTEM_SETUP_SUCCESS) {
@@ -26,16 +26,17 @@ setup_error_t systemSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_ad
     assert(result != ERROR_POWER_INTERFACE_SETUP_FAILED);
 
     /* Select voltage scaling */
-    result = selectVoltageScaling(pwr_cr_address, rcc_cr_address, voltage_scaling_output_selection);
+    result = __selectVoltageScaling(pwr_cr_address, rcc_cr_address, voltage_scaling_output_selection);
 
     /* Wait until HSI is ready */
-//    while ((RCC->CR & RCC_CR_HSIRDY) == 0);
     while ((IO_Read(rcc_cr_address) & RCC_CR_HSIRDY) == 0);
+
+    /* TODO: Adding an assert that uses an IO_Read would mess the code so not sure what to do */
 
     return result;
 }
 
-setup_error_t enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
+setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
 {
     /* TODO: I should add a clock variable it is already in the systemSetup */
     ioData temporary;
@@ -53,7 +54,7 @@ setup_error_t enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
     }
 }
 
-setup_error_t selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_address,
+setup_error_t __selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_address,
                                    voltage_scale_t vos)
 {
     /* TODO: should there be a check that the address is correct? */

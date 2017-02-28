@@ -29,7 +29,7 @@ setup_error_t systemSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_ad
  * @param rcc_apb1lpenr_address
  * @return A type of error during setup
  */
-setup_error_t enablePowerInterface(ioAddress *rcc_apb1lpenr_address);
+setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address);
 /* TODO: potentially add a disablePowerInterface function here for symmetry */
 
 /**
@@ -45,6 +45,6 @@ setup_error_t enablePowerInterface(ioAddress *rcc_apb1lpenr_address);
  * when the device does not operate at the maximum frequency.
  */
 /* TODO: Check what scale 2 and scale 3 mean */
-setup_error_t selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_address,
+setup_error_t __selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_address,
                                    voltage_scale_t vos);
 #endif /* SYSTEMSETUP_H */

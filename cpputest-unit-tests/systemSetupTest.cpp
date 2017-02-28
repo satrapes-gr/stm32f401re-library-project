@@ -63,7 +63,7 @@ TEST(systemSetup, TestClockEnableSuccess)
                                  (ioData) virtualRCC_APB1ClockEnableRegister | RCC_APB1LPENR_PWRLPEN);
 
     /* Run code */
-    result = enablePowerInterface((ioAddress *) &virtualRCC_APB1ClockEnableRegister);
+    result = __enablePowerInterface((ioAddress *) &virtualRCC_APB1ClockEnableRegister);
 
     /* Check that the clock has been enabled */
     LONGS_EQUAL(result, SYSTEM_SETUP_SUCCESS);
@@ -85,7 +85,7 @@ TEST(systemSetup, TestClockEnableFailure)
                                  ((ioData) virtualRCC_APB1ClockEnableRegister & (!RCC_APB1LPENR_PWRLPEN)));
 
     /* Run code */
-    result = enablePowerInterface((ioAddress *) &virtualRCC_APB1ClockEnableRegister);
+    result = __enablePowerInterface((ioAddress *) &virtualRCC_APB1ClockEnableRegister);
 
     /* Check that the clock has been enabled */
     LONGS_EQUAL(result, ERROR_POWER_INTERFACE_SETUP_FAILED);
@@ -106,7 +106,7 @@ TEST(systemSetup, TestSetRegulatorPLLIsOn)
                                  (ioData) virtualRCC_CRRegister);
 
     /* Run code */
-    result = selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
+    result = __selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
                                   (ioAddress *) &virtualRCC_CRRegister, (voltage_scale_t) SCALE_2);
 
     CHECK_EQUAL(result, ERROR_VOS_PLL_IS_ON);
@@ -127,7 +127,7 @@ TEST(systemSetup, TestSetRegulatorInvalidVOSMode)
                                  (ioData) virtualRCC_CRRegister);
 
     /* Run code */
-    result = selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
+    result = __selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
                                   (ioAddress *) &virtualRCC_CRRegister,
                                   (voltage_scale_t) INVALID_VOS_MODE);
 
@@ -162,7 +162,7 @@ TEST(systemSetup, TestSetRegulatorValidVOSModeCorrectlyWritten)
                                  (ioData) virtualPWR_ControlRegister | (vos << VOS_BITS_LOCATION));
 
     /* Run code */
-    result = selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
+    result = __selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
                                   (ioAddress *) &virtualRCC_CRRegister, vos);
 
     CHECK_EQUAL(result, SYSTEM_SETUP_SUCCESS);
@@ -196,7 +196,7 @@ TEST(systemSetup, TestSetRegulatorValidVOSModeIncorrectlyWritten)
                                  (ioData) INCORRECT_VOS_VALUE);
 
     /* Run code */
-    result = selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
+    result = __selectVoltageScaling((ioAddress *) &virtualPWR_ControlRegister,
                                   (ioAddress *) &virtualRCC_CRRegister, vos);
 
     CHECK_EQUAL(result, ERROR_VOS_SETUP_FAILED);
@@ -250,4 +250,5 @@ TEST(systemSetup, WaitUntilHSIReady)
             RCC_APB1LPENR_PWRLPEN, SCALE_3);
     CHECK_EQUAL(SYSTEM_SETUP_SUCCESS, result);
 }
+
 
