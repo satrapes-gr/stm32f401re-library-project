@@ -8,10 +8,10 @@
 
 //static uint8_t select
 
-setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_address,
+rcc_setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_address,
         ioAddress *rcc_cr_address, uint32_t clock, uint32_t voltage_scaling_output_selection)
 {
-    setup_error_t result;
+    rcc_setup_error_t result;
 
     /* Enable power interface */
     result = __enablePowerInterface(rcc_apb1lpenr_address);
@@ -25,18 +25,14 @@ setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_addre
     /* Assert result is different than any power interface setup error */
     assert(result != ERROR_POWER_INTERFACE_SETUP_FAILED);
 
-    /* Select voltage scaling */
-    result = __selectVoltageScaling(pwr_cr_address, rcc_cr_address, voltage_scaling_output_selection);
-
     /* Wait until HSI is ready */
     while ((IO_Read(rcc_cr_address) & RCC_CR_HSIRDY) == 0);
 
     /* TODO: Adding an assert that uses an IO_Read would mess the code so not sure what to do */
-
     return result;
 }
 
-setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
+rcc_setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
 {
     /* TODO: I should add a clock variable it is already in the rccSetup */
     ioData temporary;
@@ -49,48 +45,6 @@ setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
     if (!(IO_Read(rcc_apb1lpenr_address) & RCC_APB1LPENR_PWRLPEN))
     {
         return ERROR_POWER_INTERFACE_SETUP_FAILED;
-    } else {
-        return RCC_SETUP_SUCCESS;
-    }
-}
-
-setup_error_t __selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_address,
-                                   voltage_scale_t vos)
-{
-    /* TODO: should there be a check that the address is correct? */
-    ioData temp;
-
-    /* Check that PLL is off before proceeding */
-    temp = IO_Read(rcc_cr_address);
-    if (temp & RCC_CR_PLLON)
-    {
-        /* Unable to set VOS scale mode as PLL is On */
-        return ERROR_VOS_PLL_IS_ON;
-    }
-
-    /* Assert PLL is off */
-    assert(!(temp & RCC_CR_PLLON));
-    /* Check arguments valid modes are 1 (Scale 3 mode) and 2 (Scale 2 mode) */
-    if (vos < 1 || vos > 2)
-    {
-        return ERROR_VOS_INCORRECT_MODE;
-    }
-
-    /* Assert valid mode */
-    assert((vos == 1) || (vos == 2));
-
-    /* Set VOS mode */
-    /* TODO: Verify scaling mode when PLL is turned on */
-    /* TODO: Improve bit setting expressions */
-
-    temp = IO_Read(pwr_cr_address);
-
-    IO_Write(pwr_cr_address, (temp | (vos << VOS_BITS_LOCATION)));
-
-    temp = (IO_Read(pwr_cr_address) & PWR_CR_VOS) >> VOS_BITS_LOCATION;
-    if (!((temp == 1) && (vos == 1)) || ((temp == 2) && (vos == 2)))
-    {
-        return ERROR_VOS_SETUP_FAILED;
     } else {
         return RCC_SETUP_SUCCESS;
     }
