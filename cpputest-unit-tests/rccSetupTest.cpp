@@ -23,6 +23,7 @@ extern "C"
 {
 #include "rccSetup.h"
 #include "coreSetup.h"
+#include "utils.h"
 #include "MockIO.h"
 #include <stdio.h>
 }
