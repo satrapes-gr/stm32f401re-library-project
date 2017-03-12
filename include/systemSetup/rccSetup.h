@@ -12,6 +12,7 @@
 typedef enum {
                 RCC_SETUP_SUCCESS = 0,
                 ERROR_POWER_INTERFACE_SETUP_FAILED,
+                ERROR_HSI_ENABLE_FAILED
              } rcc_setup_error_t;
 
 /*
@@ -28,4 +29,10 @@ rcc_setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_a
 rcc_setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address);
 /* TODO: potentially add a disablePowerInterface function here for symmetry */
 
+/**
+ * @brief This function enables the internal clock (HSI)
+ * @param rcc_cr address
+ * @ return A type of error during setup
+ */
+rcc_setup_error_t __enableHSI(ioAddress *rcc_cr_address);
 #endif /* RCCSETUP_H */

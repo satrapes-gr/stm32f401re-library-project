@@ -13,6 +13,10 @@ rcc_setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_a
 {
     rcc_setup_error_t result;
 
+    /* Reset RCC clock configuration to the default reset state */
+    /* Enable internal clock (HSI) */
+    result = __enableHSI(rcc_cr_address);
+
     /* Enable power interface */
     result = __enablePowerInterface(rcc_apb1lpenr_address);
 
@@ -45,6 +49,20 @@ rcc_setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
     if (!(IO_Read(rcc_apb1lpenr_address) & RCC_APB1LPENR_PWRLPEN))
     {
         return ERROR_POWER_INTERFACE_SETUP_FAILED;
+    } else {
+        return RCC_SETUP_SUCCESS;
+    }
+}
+
+rcc_setup_error_t __enableHSI(ioAddress *rcc_cr_address) {
+    /* TODO: add disable HSI for symmetry */
+    ioData temporary;
+
+    temporary = IO_Read(rcc_cr_address);
+    IO_Write(rcc_cr_address, temporary | RCC_CR_HSION);
+
+    if (!(IO_Read(rcc_cr_address) & RCC_CR_HSION)) {
+        return ERROR_HSI_ENABLE_FAILED;
     } else {
         return RCC_SETUP_SUCCESS;
     }

@@ -64,7 +64,7 @@ TEST(rccSetup, TestClockEnableSuccess)
     result = __enablePowerInterface((ioAddress *) &virtualRCC_APB1ClockEnableRegister);
 
     /* Check that the clock has been enabled */
-    LONGS_EQUAL(result, RCC_SETUP_SUCCESS);
+    LONGS_EQUAL(RCC_SETUP_SUCCESS, result);
 }
 
 TEST(rccSetup, TestClockEnableFailure)
@@ -86,10 +86,10 @@ TEST(rccSetup, TestClockEnableFailure)
     result = __enablePowerInterface((ioAddress *) &virtualRCC_APB1ClockEnableRegister);
 
     /* Check that the clock has been enabled */
-    LONGS_EQUAL(result, ERROR_POWER_INTERFACE_SETUP_FAILED);
+    LONGS_EQUAL(ERROR_POWER_INTERFACE_SETUP_FAILED, result);
 }
 
-TEST(rccSetup, WaitUntilHSIReady)
+IGNORE_TEST(rccSetup, WaitUntilHSIReady)
 {
     /* Read RCC->CR & RCC_CR_HSIRDY many times until it becomes one */
     uint16_t i;
@@ -121,4 +121,44 @@ TEST(rccSetup, WaitUntilHSIReady)
     CHECK_EQUAL(RCC_SETUP_SUCCESS, result);
 }
 
+TEST(rccSetup, TestHSIEnableSuccess) {
+    rcc_setup_error_t result;
+    ioData virtualRCC_CR_Register = (ioData) 0x0;
 
+    /* Setup mock expectations */
+    /* Read RCC_APB1ClockEnableRegister and enable clock */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register);
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_CR_Register,
+            virtualRCC_CR_Register | RCC_CR_HSION);
+    /* Check that clock was indeed set */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register | RCC_CR_HSION);
+
+    /* Run code */
+    result = __enableHSI((ioAddress *) &virtualRCC_CR_Register);
+
+    /* Check that the clock has been enabled */
+    LONGS_EQUAL(RCC_SETUP_SUCCESS, result);
+}
+
+TEST(rccSetup, TestHSIEnableFailure) {
+    rcc_setup_error_t result;
+    ioData virtualRCC_CR_Register = (ioData) 0x0;
+
+    /* Setup mock expectations */
+    /* Read RCC_APB1ClockEnableRegister and enable clock */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register);
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_CR_Register,
+            virtualRCC_CR_Register | RCC_CR_HSION);
+    /* Check that clock was indeed set */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register & (!RCC_CR_HSION));
+
+    /* Run code */
+    result = __enableHSI((ioAddress *) &virtualRCC_CR_Register);
+
+    /* Check that the clock has been enabled */
+    LONGS_EQUAL(ERROR_HSI_ENABLE_FAILED, result);
+}
