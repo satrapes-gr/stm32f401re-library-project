@@ -9,7 +9,8 @@
 //static uint8_t select
 
 rcc_setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_address,
-        ioAddress *rcc_cr_address, uint32_t clock, uint32_t voltage_scaling_output_selection)
+        ioAddress *rcc_cr_address, ioAddress *rcc_cfgr_address, uint32_t clock,
+        uint32_t voltage_scaling_output_selection)
 {
     rcc_setup_error_t result;
 
@@ -17,11 +18,14 @@ rcc_setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_a
     /* Enable internal clock (HSI) */
     result = __enableHSI(rcc_cr_address);
 
+    result = __resetCFGRReg(rcc_cfgr_address);
+
     /* Enable power interface */
     result = __enablePowerInterface(rcc_apb1lpenr_address);
 
     /* Check output and fail early */
-    if (result != RCC_SETUP_SUCCESS) {
+    if (result != RCC_SETUP_SUCCESS)
+    {
         return result;
     }
     /* TODO: Figure out how to deal with asserts. Maybe have a DEBUG and a RELEASE build but to do
@@ -41,7 +45,7 @@ rcc_setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
     /* TODO: I should add a clock variable it is already in the rccSetup */
     bool result;
 
-    result = __setBit(rcc_apb1lpenr_address, RCC_APB1LPENR_PWRLPEN);
+    result = __setBitMask(rcc_apb1lpenr_address, RCC_APB1LPENR_PWRLPEN);
     /*TODO: potential bug in the OR this can be non zero if any other bit than the one currently
      *      examined is non zero
      */
@@ -54,15 +58,28 @@ rcc_setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
     }
 }
 
-rcc_setup_error_t __enableHSI(ioAddress *rcc_cr_address) {
+rcc_setup_error_t __enableHSI(ioAddress *rcc_cr_address)
+{
     /* TODO: add disable HSI for symmetry */
     bool result;
 
-    result = __setBit(rcc_cr_address, RCC_CR_HSION);
+    result = __setBitMask(rcc_cr_address, RCC_CR_HSION);
 
     if (result)
     {
         return ERROR_HSI_ENABLE_FAILED;
+    } else
+    {
+        return RCC_SETUP_SUCCESS;
+    }
+}
+
+rcc_setup_error_t __resetCFGRReg(ioAddress *rcc_cfgr_address)
+{
+    IO_Write(rcc_cfgr_address, 0);
+    if (IO_Read(rcc_cfgr_address))
+    {
+        return ERROR_RESET_CFGR;
     } else
     {
         return RCC_SETUP_SUCCESS;

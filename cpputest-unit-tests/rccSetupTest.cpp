@@ -98,6 +98,7 @@ IGNORE_TEST(rccSetup, WaitUntilHSIReady)
     ioData virtualRCC_APB1ClockEnableRegister = (ioData) 0x0;
     ioData virtualPWR_ControlRegister = (ioData) 0x0;
     ioData virtualRCC_CRRegister = (ioData) 0x0;
+    ioData virtualRCC_CFGRRegister = (ioData) 0x0;
 
     /* Enable power interface mocks*/
     MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
@@ -118,11 +119,12 @@ IGNORE_TEST(rccSetup, WaitUntilHSIReady)
     MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CRRegister, (ioData) RCC_CR_HSIRDY);
     result = rccSetup((ioAddress *) &virtualRCC_APB1ClockEnableRegister,
             (ioAddress *) &virtualPWR_ControlRegister, (ioAddress *) &virtualRCC_CRRegister,
-            RCC_APB1LPENR_PWRLPEN, SCALE_3);
+            (ioAddress *) &virtualRCC_CFGRRegister, RCC_APB1LPENR_PWRLPEN, SCALE_3);
     CHECK_EQUAL(RCC_SETUP_SUCCESS, result);
 }
 
-TEST(rccSetup, TestHSIEnableSuccess) {
+TEST(rccSetup, TestHSIEnableSuccess)
+{
     rcc_setup_error_t result;
     ioData virtualRCC_CR_Register = (ioData) 0x0;
 
@@ -143,7 +145,8 @@ TEST(rccSetup, TestHSIEnableSuccess) {
     LONGS_EQUAL(RCC_SETUP_SUCCESS, result);
 }
 
-TEST(rccSetup, TestHSIEnableFailure) {
+TEST(rccSetup, TestHSIEnableFailure)
+{
     rcc_setup_error_t result;
     ioData virtualRCC_CR_Register = (ioData) 0x0;
 
@@ -162,4 +165,36 @@ TEST(rccSetup, TestHSIEnableFailure) {
 
     /* Check that the clock has been enabled */
     LONGS_EQUAL(ERROR_HSI_ENABLE_FAILED, result);
+}
+
+TEST(rccSetup, TestRCCCFGRResetSuccess)
+{
+    rcc_setup_error_t result;
+    ioData virtualRCC_CFGR_Register = (ioData) RANDOM_VALUE;
+
+    /* Setup mock expectations */
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_CFGR_Register, 0);
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CFGR_Register, 0);
+
+    /* Run code */
+    result = __resetCFGRReg(&virtualRCC_CFGR_Register);
+
+    /* Check that the clock has been enabled */
+    LONGS_EQUAL(RCC_SETUP_SUCCESS, result);
+}
+
+TEST(rccSetup, TestRCCCFGRResetFailure)
+{
+    rcc_setup_error_t result;
+    ioData virtualRCC_CFGR_Register = (ioData) RANDOM_VALUE;
+
+    /* Setup mock expectations */
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_CFGR_Register, 0);
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CFGR_Register, RANDOM_VALUE);
+
+    /* Run code */
+    result = __resetCFGRReg(&virtualRCC_CFGR_Register);
+
+    /* Check that the clock has been enabled */
+    LONGS_EQUAL(ERROR_RESET_CFGR, result);
 }
