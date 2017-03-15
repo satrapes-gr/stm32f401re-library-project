@@ -16,6 +16,8 @@ typedef enum {
                 ERROR_HSI_ENABLE_FAILED,
                 ERROR_RESET_CFGR,
                 ERROR_HSE_DISABLE_FAILED,
+                ERROR_CSS_DISABLE_FAILED,
+                ERROR_PLL_DISABLE_FAILED
              } rcc_setup_error_t;
 
 
@@ -54,4 +56,18 @@ rcc_setup_error_t __resetCFGRReg(ioAddress *rcc_cfgr_address);
  * @return A type of error during setup or success
  */
 rcc_setup_error_t __disableHSE(ioAddress *rcc_cr_address);
+
+/**
+ * @brief Disable CSS
+ * @param rcc_cr_address
+ * @return A type of error during setup or success
+ */
+rcc_setup_error_t __disableCSS(ioAddress *rcc_cr_address);
+
+/**
+ * @brief Disable PLL
+ * @param rcc_cr_address
+ * @return A type of error during setup or success
+ */
+rcc_setup_error_t __disablePLL(ioAddress *rcc_cr_address);
 #endif /* RCCSETUP_H */

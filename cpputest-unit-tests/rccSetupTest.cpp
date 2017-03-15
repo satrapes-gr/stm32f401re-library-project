@@ -242,3 +242,92 @@ TEST(rccSetup, TestDisableHSEFailure)
     /* Check that the clock has been enabled */
     LONGS_EQUAL(ERROR_HSE_DISABLE_FAILED, result);
 }
+
+TEST(rccSetup, TestDisableCSSSuccess)
+{
+    rcc_setup_error_t result;
+    ioData virtualRCC_CR_Register = (ioData) ALL_ONES;
+
+    /* Setup mock expectations */
+    /* Read RCC_CRRegister and disable clock successfully */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register);
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_CR_Register,
+            virtualRCC_CR_Register & (~RCC_CR_CSSON));
+    /* Check that clock was indeed disabled */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register & (~RCC_CR_CSSON));
+
+    /* Run code */
+    result = __disableCSS((ioAddress *) &virtualRCC_CR_Register);
+
+    /* Check that the clock has been enabled */
+    LONGS_EQUAL(RCC_SETUP_SUCCESS, result);
+}
+
+TEST(rccSetup, TestDisableCSSFailure)
+{
+    rcc_setup_error_t result;
+    ioData virtualRCC_CR_Register = (ioData) ALL_ONES;
+
+    /* Setup mock expectations */
+    /* Read RCC_CRRegister and disable clock unsuccessfully */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register);
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_CR_Register,
+            virtualRCC_CR_Register & (~RCC_CR_CSSON));
+     /* Check that clock was indeed set */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) ALL_ONES);
+
+     /* Run code */
+    result = __disableCSS((ioAddress *) &virtualRCC_CR_Register);
+
+    /* Check that the clock has been enabled */
+    LONGS_EQUAL(ERROR_CSS_DISABLE_FAILED, result);
+}
+
+TEST(rccSetup, TestDisablePLLSuccess)
+{
+    rcc_setup_error_t result;
+    ioData virtualRCC_CR_Register = (ioData) ALL_ONES;
+
+    /* Setup mock expectations */
+    /* Read RCC_CRRegister and disable clock successfully */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register);
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_CR_Register,
+            virtualRCC_CR_Register & (~RCC_CR_PLLON));
+    /* Check that clock was indeed disabled */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register & (~RCC_CR_PLLON));
+
+    /* Run code */
+    result = __disablePLL((ioAddress *) &virtualRCC_CR_Register);
+
+    /* Check that the clock has been enabled */
+    LONGS_EQUAL(RCC_SETUP_SUCCESS, result);
+}
+
+TEST(rccSetup, TestDisablePLLFailure)
+{
+    rcc_setup_error_t result;
+    ioData virtualRCC_CR_Register = (ioData) ALL_ONES;
+
+    /* Setup mock expectations */
+    /* Read RCC_CRRegister and disable clock unsuccessfully */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) virtualRCC_CR_Register);
+    MockIO_Expect_Write((ioAddress *) &virtualRCC_CR_Register,
+            virtualRCC_CR_Register & (~RCC_CR_PLLON));
+     /* Check that clock was indeed set */
+    MockIO_Expect_ReadThenReturn((ioAddress *) &virtualRCC_CR_Register,
+                                 (ioData) ALL_ONES);
+
+     /* Run code */
+    result = __disablePLL((ioAddress *) &virtualRCC_CR_Register);
+
+    /* Check that the clock has been enabled */
+    LONGS_EQUAL(ERROR_PLL_DISABLE_FAILED, result);
+}
+

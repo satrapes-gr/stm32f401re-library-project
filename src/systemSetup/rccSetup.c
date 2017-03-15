@@ -102,3 +102,35 @@ rcc_setup_error_t __disableHSE(ioAddress *rcc_cr_address)
         return RCC_SETUP_SUCCESS;
     }
 }
+
+rcc_setup_error_t __disableCSS(ioAddress *rcc_cr_address)
+{
+    /* TODO: add enable HSE for symmetry */
+    bool result;
+
+    result = __clearBitMask(rcc_cr_address, RCC_CR_CSSON);
+
+    if (result)
+    {
+        return ERROR_CSS_DISABLE_FAILED;
+    } else
+    {
+        return RCC_SETUP_SUCCESS;
+    }
+}
+
+rcc_setup_error_t __disablePLL(ioAddress *rcc_cr_address)
+{
+    /* TODO: add enable HSE for symmetry */
+    bool result;
+
+    result = __clearBitMask(rcc_cr_address, RCC_CR_PLLON);
+
+    if (result)
+    {
+        return ERROR_PLL_DISABLE_FAILED;
+    } else
+    {
+        return RCC_SETUP_SUCCESS;
+    }
+}
