@@ -18,6 +18,7 @@ rcc_setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_a
     /* Enable internal clock (HSI) */
     result = __enableHSI(rcc_cr_address);
 
+    /* Reset RCC_CFGR */
     result = __resetCFGRReg(rcc_cfgr_address);
 
     /* Enable power interface */
@@ -76,10 +77,26 @@ rcc_setup_error_t __enableHSI(ioAddress *rcc_cr_address)
 
 rcc_setup_error_t __resetCFGRReg(ioAddress *rcc_cfgr_address)
 {
-    IO_Write(rcc_cfgr_address, 0);
+    IO_Write(rcc_cfgr_address, RCC_CFGR_RESET_VALUE);
     if (IO_Read(rcc_cfgr_address))
     {
         return ERROR_RESET_CFGR;
+    } else
+    {
+        return RCC_SETUP_SUCCESS;
+    }
+}
+
+rcc_setup_error_t __disableHSE(ioAddress *rcc_cr_address)
+{
+    /* TODO: add enable HSE for symmetry */
+    bool result;
+
+    result = __clearBitMask(rcc_cr_address, RCC_CR_HSEON);
+
+    if (result)
+    {
+        return ERROR_HSE_DISABLE_FAILED;
     } else
     {
         return RCC_SETUP_SUCCESS;
