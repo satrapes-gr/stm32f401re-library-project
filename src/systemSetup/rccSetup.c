@@ -21,6 +21,17 @@ rcc_setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_a
     /* Reset RCC_CFGR */
     result = __resetCFGRReg(rcc_cfgr_address);
 
+    /* TODO: Check if it best to set multiple bits at the same time with one function. At least
+     *       consider this */
+    /* Disable HSE */
+    result = __disableHSE(rcc_cr_address);
+
+    /* Disable CSS */
+    result = __disableCSS(rcc_cr_address);
+
+    /* Disable PLL */
+    result = __disablePLL(rcc_cr_address);
+
     /* Enable power interface */
     result = __enablePowerInterface(rcc_apb1lpenr_address);
 
