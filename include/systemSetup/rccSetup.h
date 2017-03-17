@@ -2,13 +2,11 @@
 #define RCCSETUP_H
 #include "stm32f4xx.h"
 #include "IO.h"
-#include "utils.h"
 
 #include <stdbool.h>
 #include <assert.h>
 
 #define RCC_CFGR_RESET_VALUE (0)
-
 /*
  * This enum contains all possible errors in the rcc setup
  */
@@ -21,6 +19,7 @@ typedef enum {
                 ERROR_CSS_DISABLE_FAILED,
                 ERROR_PLL_DISABLE_FAILED
              } rcc_setup_error_t;
+
 
 /*
  * TODO: add doxygen comments
@@ -71,19 +70,4 @@ rcc_setup_error_t __disableCSS(ioAddress *rcc_cr_address);
  * @return A type of error during setup or success
  */
 rcc_setup_error_t __disablePLL(ioAddress *rcc_cr_address);
-
-/**
- * @brief Reset PLLCFGR register
- * @param rcc_pllcfgr_address
- * @return A type of error during setup or success
- */
-rcc_setup_error_t __resetPLLCFGR(ioAddress *rcc_pllcfgr_address);
-
-/**
- * @brief Select the correct value of PLLQ in RCC_PLLCFGR register
- * @param rcc_pllcfgr_address
- * @param PLLQ_value 2<=PLLQ<=15
- * @return A type of error during setup or success
- */
-rcc_setup_error_t __selectPLLQ(ioAddress *rcc_pllcfgr_address, uint8_t PLLQ_value);
 #endif /* RCCSETUP_H */

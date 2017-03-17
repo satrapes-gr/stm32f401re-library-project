@@ -1,6 +1,6 @@
 //#include <stdint.h>
 #include "rccSetup.h"
-
+#include "utils.h"
 //int global_uninit;
 //int global_init = 0;
 //static int global_static_uninit;
@@ -13,36 +13,33 @@ rcc_setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_a
         uint32_t voltage_scaling_output_selection)
 {
     rcc_setup_error_t result;
-    /* TODO: Add a function pointer vector where all these functions are going to be in and then we
-     *       will iterate over them without repeating the CHECK_OUTPUT(result, RCC_SETUP_SUCCESS);
-     *       macro all the time.
-     */
+
     /* Reset RCC clock configuration to the default reset state */
     /* Enable internal clock (HSI) */
     result = __enableHSI(rcc_cr_address);
-    CHECK_OUTPUT(result, RCC_SETUP_SUCCESS);
 
     /* Reset RCC_CFGR */
     result = __resetCFGRReg(rcc_cfgr_address);
-    CHECK_OUTPUT(result, RCC_SETUP_SUCCESS);
 
     /* TODO: Check if it best to set multiple bits at the same time with one function. At least
      *       consider this */
     /* Disable HSE */
     result = __disableHSE(rcc_cr_address);
-    CHECK_OUTPUT(result, RCC_SETUP_SUCCESS);
 
     /* Disable CSS */
     result = __disableCSS(rcc_cr_address);
-    CHECK_OUTPUT(result, RCC_SETUP_SUCCESS);
 
     /* Disable PLL */
     result = __disablePLL(rcc_cr_address);
-    CHECK_OUTPUT(result, RCC_SETUP_SUCCESS);
 
     /* Enable power interface */
     result = __enablePowerInterface(rcc_apb1lpenr_address);
 
+    /* Check output and fail early */
+    if (result != RCC_SETUP_SUCCESS)
+    {
+        return result;
+    }
     /* TODO: Figure out how to deal with asserts. Maybe have a DEBUG and a RELEASE build but to do
      *       that I first have to convert my makefiles into eclipse projects. */
     /* Assert result is different than any power interface setup error */
@@ -58,17 +55,35 @@ rcc_setup_error_t rccSetup(ioAddress *rcc_apb1lpenr_address, ioAddress *pwr_cr_a
 rcc_setup_error_t __enablePowerInterface(ioAddress *rcc_apb1lpenr_address)
 {
     /* TODO: I should add a clock variable it is already in the rccSetup */
-    ENABLE_BITS_AND_CHECK_RETURN_ERROR(rcc_apb1lpenr_address, RCC_APB1LPENR_PWRLPEN,
-                                ERROR_POWER_INTERFACE_SETUP_FAILED, RCC_SETUP_SUCCESS);
+    bool result;
+
+    result = __setBitMask(rcc_apb1lpenr_address, RCC_APB1LPENR_PWRLPEN);
     /*TODO: potential bug in the OR this can be non zero if any other bit than the one currently
-     *      examined is non zero */
+     *      examined is non zero
+     */
+    if (result)
+    {
+        return ERROR_POWER_INTERFACE_SETUP_FAILED;
+    } else
+    {
+        return RCC_SETUP_SUCCESS;
+    }
 }
 
 rcc_setup_error_t __enableHSI(ioAddress *rcc_cr_address)
 {
     /* TODO: add disable HSI for symmetry */
-    ENABLE_BITS_AND_CHECK_RETURN_ERROR(rcc_cr_address, RCC_CR_HSION, ERROR_HSI_ENABLE_FAILED,
-                                       RCC_SETUP_SUCCESS);
+    bool result;
+
+    result = __setBitMask(rcc_cr_address, RCC_CR_HSION);
+
+    if (result)
+    {
+        return ERROR_HSI_ENABLE_FAILED;
+    } else
+    {
+        return RCC_SETUP_SUCCESS;
+    }
 }
 
 rcc_setup_error_t __resetCFGRReg(ioAddress *rcc_cfgr_address)
@@ -86,30 +101,47 @@ rcc_setup_error_t __resetCFGRReg(ioAddress *rcc_cfgr_address)
 rcc_setup_error_t __disableHSE(ioAddress *rcc_cr_address)
 {
     /* TODO: add enable HSE for symmetry */
-    DISABLE_BITS_AND_CHECK_RETURN_ERROR(rcc_cr_address, RCC_CR_HSEON, ERROR_HSE_DISABLE_FAILED,
-                                        RCC_SETUP_SUCCESS);
+    bool result;
+
+    result = __clearBitMask(rcc_cr_address, RCC_CR_HSEON);
+
+    if (result)
+    {
+        return ERROR_HSE_DISABLE_FAILED;
+    } else
+    {
+        return RCC_SETUP_SUCCESS;
+    }
 }
 
 rcc_setup_error_t __disableCSS(ioAddress *rcc_cr_address)
 {
     /* TODO: add enable HSE for symmetry */
-    DISABLE_BITS_AND_CHECK_RETURN_ERROR(rcc_cr_address, RCC_CR_CSSON, ERROR_CSS_DISABLE_FAILED,
-                                        RCC_SETUP_SUCCESS);
+    bool result;
+
+    result = __clearBitMask(rcc_cr_address, RCC_CR_CSSON);
+
+    if (result)
+    {
+        return ERROR_CSS_DISABLE_FAILED;
+    } else
+    {
+        return RCC_SETUP_SUCCESS;
+    }
 }
 
 rcc_setup_error_t __disablePLL(ioAddress *rcc_cr_address)
 {
     /* TODO: add enable HSE for symmetry */
-    DISABLE_BITS_AND_CHECK_RETURN_ERROR(rcc_cr_address, RCC_CR_PLLON, ERROR_PLL_DISABLE_FAILED,
-                                        RCC_SETUP_SUCCESS);
-}
+    bool result;
 
-rcc_setup_error_t __selectPLLQ(ioAddress *rcc_pllcfgr_address, uint8_t PLLQ_value)
-{
+    result = __clearBitMask(rcc_cr_address, RCC_CR_PLLON);
 
-}
-
-rcc_setup_error_t __resetPLLCFGR(ioAddress *rcc_pllcfgr_address)
-{
-    return RCC_SETUP_SUCCESS;
+    if (result)
+    {
+        return ERROR_PLL_DISABLE_FAILED;
+    } else
+    {
+        return RCC_SETUP_SUCCESS;
+    }
 }

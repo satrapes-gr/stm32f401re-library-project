@@ -23,8 +23,8 @@ typedef enum {
 * Voltage scaler allowed values
 */
 typedef enum {
-    SCALE_3 = 1,
-    SCALE_2 = 2,
+                SCALE_2 = 2,
+                SCALE_3 = 1,
 } voltage_scale_t;
 
 /**
