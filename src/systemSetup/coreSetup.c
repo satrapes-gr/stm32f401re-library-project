@@ -14,7 +14,7 @@ core_setup_error_t coreSetup(ioAddress *pwr_cr_address, ioAddress *rcc_cr_addres
 }
 
 core_setup_error_t __selectVoltageScaling(ioAddress *pwr_cr_address, ioAddress *rcc_cr_address,
-                                   voltage_scale_t vos)
+                                       voltage_scale_t vos)
 {
     /* TODO: should there be a check that the address is correct? */
     ioData temp;
