@@ -56,3 +56,8 @@ IGNORE_TEST(utilsSetup, setBit)
 
     CHECK_EQUAL(true, result);
 }
+
+TEST(utilsSetup, CreateLinkedList)
+{
+
+}

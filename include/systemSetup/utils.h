@@ -22,4 +22,6 @@ bool __setBitMask(ioAddress *reg_address, uint32_t bit_mask);
  * @return bool 0 if clearing succeeded and 1 if it failed
  */
 bool __clearBitMask(ioAddress *reg_address, uint32_t bit_mask);
+
+
 #endif /* UTILS_H */
